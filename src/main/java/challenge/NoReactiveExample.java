@@ -12,6 +12,16 @@ public class NoReactiveExample {
     public static final int VALOR_PERMITIDO = 15;
     private final List<Estudiante> estudianteList;
 
+
+    public static void main(String ...agrs){
+        NoReactiveExample noReactiveExample = new NoReactiveExample();
+        System.out.println(noReactiveExample.sumaDePuntajes());
+        List<Estudiante> estudiantes = noReactiveExample.mayorPuntajeDeEstudiante(5);
+        estudiantes.forEach(estudiante -> System.out.println(estudiante.getNombre()));
+
+    }
+
+
     public NoReactiveExample() {
         estudianteList = List.of(
                 new Estudiante("raul", 30, List.of(1, 2, 1, 4, 5)),
@@ -24,12 +34,12 @@ public class NoReactiveExample {
 
     public Integer sumaDePuntajes() {
         return estudianteList.stream()
-                .map(this.mapeoDeEstudianteAPuntaje())
-                .reduce(0, Integer::sum);
+                 .map(Estudiante::getPuntaje)
+                .reduce(0,Integer::sum);
     }
 
     private Function<Estudiante, Integer> mapeoDeEstudianteAPuntaje() {
-        return Estudiante::getPuntaje;
+        return estudiante -> estudiante.getPuntaje();
     }
 
     public List<Estudiante> mayorPuntajeDeEstudiante(int limit) {
@@ -77,11 +87,12 @@ public class NoReactiveExample {
         return Optional.of(estudiante)
                 .filter(e -> e.getPuntaje() >= 75)
                 .map(e -> {
-                    var est1 = new Estudiante(e.getNombre(), e.getPuntaje(), e.getAsistencias());
+                    Estudiante est1 = new Estudiante(e.getNombre(), e.getPuntaje(), e.getAsistencias());
                     est1.setAprobado(true);
                     return est1;
                 }).orElseGet(() -> estudiante);
     }
+
 
 
     public List<String> estudiantesAprovados(){
